@@ -9,11 +9,11 @@ LANG="en_US.UTF-8"
 
 usage() {
   me=$(basename $0)
-  "$me"
+  echo "$me"
 }
 
 OPTIND=1
-while getopts "" opt; do
+while getopts "h" opt; do
   case "$opt" in
     h) usage; exit;;
   esac
