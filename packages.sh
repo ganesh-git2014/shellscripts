@@ -20,13 +20,15 @@ while getopts "" opt; do
 done
 shift $((OPTIND-1))
 
-. common.sh
+. `dirname $0`/common.sh
 
 packager=`packager_check`
 updater=`updater_check`
 
 if [ $packager = 'rpm' -a $updater = 'yum' ] ; then
     package_list_rpm_yum
+elif [ $packager = 'dpkg' -a $updater = 'apt' ] ; then
+    package_list_dpkg_apt
 fi
 
 
@@ -51,6 +53,11 @@ echo "List: $list"
 echo
 echo
 
+
+
 $list
+#$list_packages
+#$list_updates
+
 #eval $list
 #echo $($list)

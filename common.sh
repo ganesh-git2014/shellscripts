@@ -62,14 +62,22 @@ package_list_rpm_yum_lister() {
     packages=`make_temp`
     updates=`make_temp`
 
-#echo "Package list: $list_packages"
-#echo "Updater list: $list_updates"
-#echo "Security list: $list_security"
+    $list_packages | sort > $packages && $list_updates | sort > $updates && join -a 1 $packages $updates
 
+    if [ -e $packages ] ; then
+        rm $packages
+    fi
 
-#    echo "|||$list_packages | sort > $packages && $list_updates | sort $updates && join -a 1 $packages $updates\n"
-#exit
-    $list_packages | sort > $packages && $list_updates | sort $updates && join -a 1 $packages $updates
+    if [ -e $updates ] ; then
+        rm $updates
+    fi
+}
+
+package_list_dpkg_apt_lister() {
+    packages=`make_temp`
+    updates=`make_temp`
+
+    $list_packages | sort > $packages && $list_updates | sort > $updates && join -a 1 $packages $updates
 
     if [ -e $packages ] ; then
         rm $packages
@@ -81,8 +89,22 @@ package_list_rpm_yum_lister() {
 }
 
 package_list_rpm_yum() {
-    list_packages="rpm -qa --queryformat %{NAME}.%{ARCH}\t%{VERSION}-%{RELEASE}\n"
+    list_packages="rpm -qa --queryformat %{NAME}.%{ARCH}\t%{NAME}\t%{ARCH}\t%{VERSION}-%{RELEASE}\t%{VENDOR}\t%{GROUP}\n"
     list_updates="yum check-update"
+    # yum list-security requires yum-plugin-security
     list_security="yum list-security"
     list="package_list_rpm_yum_lister"
 }
+
+package_list_dpkg_apt_list_updates() {
+    apt-get -s --just-print upgrade | perl -nle 'print "$1\t$2\t$3\t$4" if /^Inst\s(\S+)\s.*\((\S+).*\s(\S+)\s\[[^]]+\]\)$/'
+}
+
+package_list_dpkg_apt() {
+  list_packages="dpkg-query --show --showformat=\${Package}\t\${Package}\t\${Architecture}\t\${Version}\t\t\n"
+  list_updates="package_list_dpkg_apt_list_updates"
+  list_security=""
+  list="package_list_dpkg_apt_lister"
+}
+
+
