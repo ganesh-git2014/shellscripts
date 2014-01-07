@@ -31,29 +31,21 @@ When autodetecting the packager and updater from a list of known packagers and u
 }
 
 # Variables for storing argument passing
-actions_list_package=0
-actions_list_updates=0
-actions_list_security=0
-actions_list_compact=0
 PRETTY_PRINT=0
+ACTION='package_overview'
 
 #Parse Arguments
 OPTIND=1
 while getopts "hpust" opt; do
   case "$opt" in
     h) usage; exit;;
-    p) actions_list_package=1; actions_list_updates=0; actions_list_security=0;;
-    u) actions_list_package=0; actions_list_updates=1; actions_list_security=0;;
-    s) actions_list_package=0; actions_list_updates=0; actions_list_security=1;;
+    p) ACTION='package_list';;
+    u) ACTION='package_updates';;
+    s) ACTION='packge_sec_updates';;
     t) PRETTY_PRINT=1
   esac
 done
 shift $((OPTIND-1))
-
-# If no argument provided, default to compact form
-if [ $actions_list_package -eq 0 -a $actions_list_updates -eq 0 -a $actions_list_security -eq 0 ] ; then
-  actions_list_compact=1
-fi
 
 # If we're just listing packages; assume we don't need an updater
 if [ $actions_list_package -eq 1 ] ; then
@@ -64,15 +56,13 @@ fi
 . `dirname $0`/packages.common.sh
 
 #Execute the appropriate action
-if [ $actions_list_compact -eq 1 ] ; then
-    # cut out the first field; it varies based on distribution and what the updater will provide for joining
-    #$list | cut -f 2-
-    #${package_overview} | perl -nle 'print $1 if /^\S+\s+(.*)/'
+if [ $ACTION = 'package_overview' ] ; then
     ${package_overview} | awk "$package_compact_formater"
-elif [ $actions_list_package -eq 1 ] ; then
+elif [ $ACTION = 'package_list' ] ; then
     ${package_list} | awk "$package_list_formater"
-elif [ $actions_list_updates -eq 1 ] ; then
+elif [ $ACTION = 'package_updates' ] ; then
     ${package_updates} | awk "$package_update_formater"
-elif [ $actions_list_security -eq 1 ] ; then
+elif [ $ACTION = 'package_sec_updates' ] ; then
+    #TODO: add an awk formater
     ${package_sec_updates}
 fi
