@@ -26,6 +26,9 @@ ERR_AWK_NOT_FOUND=6
 if [ -n "PRETTY_PRINT" ] ; then
     package_list_formater='{printf "%-30s%-7s%-25s%-10s%-10s\n", $2, $3, $4, $5, $6 }'
     package_update_formater='{printf "%-40s%-30s%-25s\n", $1,$2,$3 }'
+    #virtualbox-ose-guest-x11 amd64 3.2.10-dfsg-1+squeeze1
+    #xserver-xorg-core amd64 2:1.7.7-14  2:1.7.7-18 Debian-Security:6.0/oldstable
+    package_compact_formater='{printf "%-30s%-7s%-30s%-25s%-30s\n",$2,$3,$4,$5,$6}'
 else
     package_list_formater='{printf "%s\t%s\t%s\t%s\t%s\n", $2, $3,$4,$5,$6 }'
     package_update_formater='{printf "%s\t%s\t%s\n", $1,$2,$3 }'

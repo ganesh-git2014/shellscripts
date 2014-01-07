@@ -63,7 +63,8 @@ fi
 if [ $actions_list_compact -eq 1 ] ; then
     # cut out the first field; it varies based on distribution and what the updater will provide for joining
     #$list | cut -f 2-
-    ${package_overview} | perl -nle 'print $1 if /^\S+\s+(.*)/'
+    #${package_overview} | perl -nle 'print $1 if /^\S+\s+(.*)/'
+    ${package_overview} | awk "$package_compact_formater"
 elif [ $actions_list_package -eq 1 ] ; then
     ${package_list} | awk "$package_list_formater"
 elif [ $actions_list_updates -eq 1 ] ; then
