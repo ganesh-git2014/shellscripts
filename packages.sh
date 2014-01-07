@@ -25,6 +25,8 @@ When autodetecting the packager and updater from a list of known packagers and u
     -p  Display installed packages only (Name, arch, version, vendor, group)
     -u  Display available updates only (name, update version, repo)
     -s  Display available security updates only (Not Implemented; TODO)
+
+    -t  Terse Output format Use tabs instead of spaces; smaller but harder to read
 "
 }
 
@@ -33,15 +35,17 @@ actions_list_package=0
 actions_list_updates=0
 actions_list_security=0
 actions_list_compact=0
+PRETTY_PRINT=0
 
 #Parse Arguments
 OPTIND=1
-while getopts "hpus" opt; do
+while getopts "hpust" opt; do
   case "$opt" in
     h) usage; exit;;
     p) actions_list_package=1; actions_list_updates=0; actions_list_security=0;;
     u) actions_list_package=0; actions_list_updates=1; actions_list_security=0;;
     s) actions_list_package=0; actions_list_updates=0; actions_list_security=1;;
+    t) PRETTY_PRINT=1
   esac
 done
 shift $((OPTIND-1))

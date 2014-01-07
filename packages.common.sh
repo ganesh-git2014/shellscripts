@@ -23,7 +23,7 @@ ERR_AWK_NOT_FOUND=6
 . `dirname $0`/common.sh
 
 #Setup the out formatters
-if [ -n "PRETTY_PRINT" ] ; then
+if [ $PRETTY_PRINT -eq 0 ] ; then
     package_list_formater='{printf "%-30s%-7s%-25s%-10s%-10s\n", $2, $3, $4, $5, $6 }'
     package_update_formater='{printf "%-40s%-30s%-25s\n", $1,$2,$3 }'
     #virtualbox-ose-guest-x11 amd64 3.2.10-dfsg-1+squeeze1
@@ -32,6 +32,7 @@ if [ -n "PRETTY_PRINT" ] ; then
 else
     package_list_formater='{printf "%s\t%s\t%s\t%s\t%s\n", $2, $3,$4,$5,$6 }'
     package_update_formater='{printf "%s\t%s\t%s\n", $1,$2,$3 }'
+    package_compact_formater='{printf "%s\t%s\t%s\t%s\t%s\n",$2,$3,$4,$5,$6}'
 fi
 
 for file in `dirname $0`/packages.d/*.sh
