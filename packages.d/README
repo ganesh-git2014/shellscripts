@@ -1,0 +1,23 @@
+This directory contains files that allow the packages scripts to interact with various packagers (e.g. rpm or dpkg) or updaters (apt, yum, zypper, etc).
+
+The script will source the documents in their sort order; this is important as multiple options may exist (e.g. on a CentOS system both yum and rpm can list the installed packages, but RPM provides more details).
+
+In order to add a new packager:
+Add a new shell script named as <label>.sh  <label> should be replaced with the name of the packager (e.g. rpm or dpkg) although technically it is arbitrary.  As a part of the script file, test to see if PACKAGER has been defined; if not then test to see if the packager your implementing is present.
+
+Within the block that executes, it should set the PACKAGER variable to the label and implement two functions: package_check_<label> and package_list_<label>
+
+package_check should accept the name of a package and echo 0 if installed and 1 if not installed.
+
+package_list should list all of the installed programs.  The first column will be filtered before output and is used to join with the update and security update columns.  It should then list Name, Architecture, Version, Vendor and Group.  It is preferred that these fields be tab seperated, but any number of space characters is acceptable.
+
+In order to add a new updater:
+Ad a new shell script named as <label>.sh <label> should be replaced with the name of the updater (e.g. apt or ym) although technically it is arbitrary.  As a part of the script file, test to see if UPDATER has been defined; if not then test to see if the updater your implemeting is precent.
+
+Within the block that executes if present, set the UPDATER variable to the label and implement three functions: package_updates_<label>, package_sec_updates_<label>, and package_overview_<label>
+
+package_updates should list available updates for installed packages.  It should be a tab seperated list of the package, version, and repository that is supplying the update.
+
+package_sec_updates should list available security updates; it is expected that this list should be a subset of the package_updates group. (TODO: provide more details about columns)
+
+package_overview should list all installed pacakges, available updates, and available security updates.  The columns should be a column to join on that gets discarded, Name, Arch, Version, Vendor, Group, Update Version, Update Repo, Security Update Version, Security Update Repo

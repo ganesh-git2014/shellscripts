@@ -48,7 +48,7 @@ done
 shift $((OPTIND-1))
 
 # If we're just listing packages; assume we don't need an updater
-if [ $actions_list_package -eq 1 ] ; then
+if [ $ACTION = 'package_list' ] ; then
   UPDATER="fake"
 fi
 
